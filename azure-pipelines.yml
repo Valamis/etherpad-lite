@@ -1,0 +1,31 @@
+trigger:
+  batch: true
+  tags:
+    include: 
+      - "*"
+  branches:
+    include:
+      - master
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: ValamisCommons/pipeline-templates
+      ref: refs/heads/master
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: Install Node.js
+    - script: |
+        npm install
+        npm run build
+      displayName: npm install and build
